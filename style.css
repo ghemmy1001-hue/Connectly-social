@@ -338,3 +338,18 @@ main {
         border-radius: 12px;
     }
 }
+.auth-link {
+  display: inline-block;
+  padding: 9px 15px;
+  border-radius: 20px;
+  background: linear-gradient(90deg, #8238d8, #e34b9b);
+  color: white;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.auth-link:hover {
+  opacity: 0.85;
+}
