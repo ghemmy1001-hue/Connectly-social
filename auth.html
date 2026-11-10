@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connectly | Welcome</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #f5eaff, #fff0f6);
+      padding: 20px;
+    }
+
+    .auth-box {
+      width: 100%;
+      max-width: 400px;
+      background: white;
+      padding: 30px 24px;
+      border-radius: 20px;
+      box-shadow: 0 8px 30px #00000012;
+    }
+
+    .logo {
+      text-align: center;
+      font-size: 30px;
+      font-weight: bold;
+      color: #8238d8;
+      margin-bottom: 8px;
+    }
+
+    .tagline {
+      text-align: center;
+      color: #777;
+      margin-bottom: 25px;
+    }
+
+    .tabs {
+      display: flex;
+      margin-bottom: 22px;
+      background: #f3edfa;
+      border-radius: 10px;
+      padding: 4px;
+    }
+
+    .tabs button {
+      width: 50%;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      background: transparent;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .tabs button.active {
+      background: #8238d8;
+      color: white;
+    }
+
+    .auth-box input {
+      width: 100%;
+      padding: 14px;
+      margin-bottom: 14px;
+      border: 1px solid #ddd;
+      border-radius: 9px;
+      outline: none;
+      font-size: 15px;
+    }
+
+    .auth-box input:focus {
+      border-color: #8238d8;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 9px;
+      color: white;
+      background: linear-gradient(90deg, #8238d8, #e34b9b);
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    #message {
+      margin-top: 16px;
+      text-align: center;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .switch-text {
+      text-align: center;
+      margin-top: 18px;
+      color: #777;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="auth-box">
+
+    <div class="logo">Connectly</div>
+    <p class="tagline">Connect. Share. Belong.</p>
+
+    <div class="tabs">
+      <button id="loginTab" class="active" type="button">
+        Login
+      </button>
+
+      <button id="signupTab" type="button">
+        Sign Up
+      </button>
+    </div>
+
+    <form id="authForm">
+
+      <div id="signupFields" hidden>
+        <input
+          type="text"
+          id="fullName"
+          placeholder="Full name"
+          maxlength="60"
+        >
+
+        <input
+          type="text"
+          id="username"
+          placeholder="Username"
+          minlength="3"
+          maxlength="20"
+          pattern="[A-Za-z0-9_]+"
+        >
+      </div>
+
+      <input
+        type="email"
+        id="email"
+        placeholder="Email address"
+        autocomplete="email"
+        required
+      >
+
+      <input
+        type="password"
+        id="password"
+        placeholder="Password (at least 8 characters)"
+        minlength="8"
+        autocomplete="current-password"
+        required
+      >
+
+      <button class="submit-btn" id="submitBtn" type="submit">
+        Login
+      </button>
+
+    </form>
+
+    <p id="message"></p>
+
+    <p class="switch-text" id="switchText">
+      New to Connectly? Select Sign Up.
+    </p>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+
+  <script>
+    const loginTab = document.getElementById("loginTab");
+    const signupTab = document.getElementById("signupTab");
+    const signupFields = document.getElementById("signupFields");
+    const submitBtn = document.getElementById("submitBtn");
+    const authForm = document.getElementById("authForm");
+    const message = document.getElementById("message");
+
+    let mode = "login";
+
+    function setMode(newMode) {
+      mode = newMode;
+
+      const signingUp = mode === "signup";
+
+      signupFields.hidden = !signingUp;
+
+      document.getElementById("fullName").required = signingUp;
+      document.getElementById("username").required = signingUp;
+
+      loginTab.classList.toggle("active", !signingUp);
+      signupTab.classList.toggle("active", signingUp);
+
+      submitBtn.textContent = signingUp ? "Create Account" : "Login";
+
+      document.getElementById("switchText").textContent =
+        signingUp
+          ? "Already have an account? Select Login."
+          : "New to Connectly? Select Sign Up.";
+
+      message.textContent = "";
+    }
+
+    loginTab.addEventListener("click", () => setMode("login"));
+    signupTab.addEventListener("click", () => setMode("signup"));
+
+    authForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      submitBtn.disabled = true;
+      message.textContent = "Please wait...";
+
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+
+      try {
+        if (mode === "signup") {
+          const fullName =
+            document.getElementById("fullName").value.trim();
+
+          const username =
+            document.getElementById("username").value.trim().toLowerCase();
+
+          if (!/^[a-z0-9_]{3,20}$/.test(username)) {
+            throw new Error(
+              "Username must be 3–20 characters using letters, numbers or underscores."
+            );
+          }
+
+          const { data, error } = await supabaseClient.auth.signUp({
+            email,
+            password,
+            options: {
+              data: {
+                full_name: fullName,
+                username: username
+              }
+            }
+          });
+
+          if (error) throw error;
+
+          if (data.session && data.user) {
+            const { error: profileError } = await supabaseClient
+              .from("profiles")
+              .insert({
+                id: data.user.id,
+                username,
+                full_name: fullName
+              });
+
+            if (profileError) throw profileError;
+
+            message.textContent = "Account created! Opening Connectly...";
+
+            setTimeout(() => {
+              window.location.href = "index.html";
+            }, 1200);
+
+          } else {
+            message.textContent =
+              "Account created! Check your email to confirm your account, then log in.";
+          }
+
+        } else {
+          const { data, error } =
+            await supabaseClient.auth.signInWithPassword({
+              email,
+              password
+            });
+
+          if (error) throw error;
+
+          const user = data.user;
+
+          const { data: profile, error: profileError } =
+            await supabaseClient
+              .from("profiles")
+              .select("id")
+              .eq("id", user.id)
+              .maybeSingle();
+
+          if (profileError) throw profileError;
+
+          if (!profile) {
+            const { error: createError } = await supabaseClient
+              .from("profiles")
+              .insert({
+                id: user.id,
+                username: user.user_metadata.username,
+                full_name: user.user_metadata.full_name || ""
+              });
+
+            if (createError) throw createError;
+          }
+
+          message.textContent = "Login successful! Opening Connectly...";
+
+          setTimeout(() => {
+            window.location.href = "index.html";
+          }, 1000);
+        }
+
+      } catch (error) {
+        message.textContent = error.message;
+      } finally {
+        submitBtn.disabled = false;
+      }
+    });
+  </script>
+
+</body>
+    </html>
