@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ffffff">
+    <title>Connectly — Connect. Share. Belong.</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header class="topbar">
+    <h1 class="logo">Connectly<span>.</span></h1>
+    <div class="top-actions">
+        <button id="notificationsBtn" aria-label="Notifications">♡</button>
+        <button id="messagesBtn" aria-label="Messages">✉</button>
+    </div>
+</header>
+
+<main>
+
+    <!-- STORIES -->
+    <section class="stories-section">
+        <div class="section-heading">
+            <h3>Stories</h3>
+            <span>See all</span>
+        </div>
+
+        <div class="stories" id="stories">
+            <button class="story add-story" id="addStoryBtn">
+                <div class="story-avatar">+</div>
+                <span>Your story</span>
+            </button>
+
+            <div class="story">
+                <div class="story-avatar gradient">JD</div>
+                <span>james</span>
+            </div>
+
+            <div class="story">
+                <div class="story-avatar gradient">AM</div>
+                <span>amanda</span>
+            </div>
+
+            <div class="story">
+                <div class="story-avatar gradient">MK</div>
+                <span>mike</span>
+            </div>
+
+            <div class="story">
+                <div class="story-avatar gradient">SK</div>
+                <span>sarah</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- CREATE POST -->
+    <section class="create-post card">
+        <div class="create-row">
+            <div class="avatar">E</div>
+            <input
+                type="text"
+                id="postCaption"
+                placeholder="What's happening?"
+            >
+        </div>
+
+        <div class="create-actions">
+            <label for="postMedia">📷 Photo / Video</label>
+            <input
+                type="file"
+                id="postMedia"
+                accept="image/*,video/*"
+                hidden
+            >
+            <button id="publishBtn">Share Post</button>
+        </div>
+    </section>
+
+    <!-- FEED -->
+    <section class="feed-section">
+        <div class="section-heading">
+            <h3>Feed</h3>
+            <span>For you</span>
+        </div>
+
+        <div id="feed">
+
+            <article class="post card">
+                <div class="post-header">
+                    <div class="avatar">JD</div>
+                    <div class="user-info">
+                        <strong>james.d</strong>
+                        <small>2 hours ago</small>
+                    </div>
+                    <button class="more-btn">•••</button>
+                </div>
+
+                <div class="post-media placeholder-media">
+                    <span>🌅</span>
+                    <p>Beautiful moments</p>
+                </div>
+
+                <div class="post-actions">
+                    <button class="like-btn">♡</button>
+                    <button class="comment-btn">▢</button>
+                    <button class="share-btn">↗</button>
+                </div>
+
+                <div class="post-caption">
+                    <strong>james.d</strong>
+                    Enjoying the little things in life ✨
+                </div>
+
+                <small class="likes-count">24 likes</small>
+            </article>
+
+        </div>
+    </section>
+
+</main>
+
+<!-- BOTTOM NAVIGATION -->
+<nav class="bottom-nav">
+    <button class="active" data-tab="home">⌂<span>Home</span></button>
+    <button data-tab="explore">⌕<span>Explore</span></button>
+    <button data-tab="create">＋<span>Create</span></button>
+    <button data-tab="activity">♡<span>Activity</span></button>
+    <button data-tab="profile">◉<span>Profile</span></button>
+</nav>
+
+<script src="app.js"></script>
+
+</body>
+  </html>
